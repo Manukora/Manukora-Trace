@@ -51,3 +51,82 @@ export async function saveUserEmail(email: string): Promise<void> {
     throw new Error('Failed to save email. Please try again.');
   }
 }
+
+export async function getBeekeeperInfo(uuid: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  
+  const { data, error } = await supabase
+  .from('batches')
+  .select(`
+    uuid,
+    beekeeper:beekeeper_id (
+      id,
+      name,
+      bio
+    )
+  `)
+  .eq('uuid', uuid)
+  .single();
+
+  if (error) {
+    console.error('Error fetching beekeeper info:', error);
+    return null;
+  }
+
+  return data;
+}
+
+
+export async function getProductInfo(uuid: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  
+  const { data, error } = await supabase
+  .from('batches')
+  .select(`
+    uuid,
+    product:product_id (
+      id,
+      name,
+      mgo_level,
+      size
+    )
+  `)
+  .eq('uuid', uuid)
+  .single();
+
+  if (error) {
+    console.error('Error fetching product info:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function getRegionInfo(uuid: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  
+  const { data, error } = await supabase
+  .from('batches')
+  .select(`
+    uuid,
+    region:region_id (
+      id,
+      name,
+      description
+    )
+  `)
+  .eq('uuid', uuid)
+  .single();
+
+  if (error) {
+    console.error('Error fetching region info:', error);
+    return null;
+  }
+
+  return data;
+
+}
+
