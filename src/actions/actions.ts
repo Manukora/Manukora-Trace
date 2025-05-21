@@ -7,18 +7,13 @@ export async function checkUUIDExists(uuid: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
   
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('batches')
     .select('uuid')
     .eq('uuid', uuid)
     .single();
 
-  if (error && error.code !== 'PGSQL_EMPTY_RESULT') {
-    console.error('Error querying Supabase:', error);
-    return false;
-  }
-
-  return data !== null;
+  return data;
 }
 
 export async function getUserEmail(): Promise<string | null> {
