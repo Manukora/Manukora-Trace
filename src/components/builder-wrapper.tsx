@@ -41,7 +41,7 @@ export default function BuilderWrapper({ beekeeperData, productData, regionData 
     <>
       <div className="w-full mb-6">
         <BuilderComponent 
-          model="TestResults"
+          model="ProductCard"
           data={productData}
         />
       </div>
