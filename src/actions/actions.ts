@@ -7,44 +7,34 @@ export async function checkUUIDExists(uuid: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
   
-  const { data } = await supabase
-    .from('batches')
-    .select('uuid')
-    .eq('uuid', uuid)
+  console.log('Checking if UUID exists:', uuid);
+  
+  const { data, error } = await supabase
+    .from('batchesnew')
+    .select('id')
+    .eq('id', uuid)
     .single();
+
+  console.log('UUID check result:', { data, error });
 
   return data;
 }
 
-export async function getUserEmail(): Promise<string | null> {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
-  
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (!session?.user?.email) {
-    return null;
-  }
-  
-  return session.user.email;
+export async function getUserEmail() {
+  const cookieStore = await cookies();
+  const email = cookieStore.get('user_email');
+  return email?.value || null;
 }
 
-export async function saveUserEmail(email: string): Promise<void> {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
-  
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
-    }
+export async function saveUserEmail(email: string) {
+  const cookieStore = await cookies();
+  cookieStore.set('user_email', email, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 30 // 30 days
   });
-  
-  if (error) {
-    console.error('Error signing in with OTP:', error);
-    throw new Error('Failed to save email. Please try again.');
-  }
+  return true;
 }
 
 export async function getBeekeeperInfo(uuid: string) {
@@ -52,24 +42,26 @@ export async function getBeekeeperInfo(uuid: string) {
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
   
   const { data, error } = await supabase
-  .from('batches')
+  .from('batchesnew')
   .select(`
-    uuid,
+    id,
     beekeeper:beekeeper_id (
       id,
-      name,
-      bio
+      title,
+      description
     )
   `)
-  .eq('uuid', uuid)
-  .single();
+  .eq('id', uuid)
+  .maybeSingle();
 
   if (error) {
     console.error('Error fetching beekeeper info:', error);
     return null;
   }
 
-  return data;
+  console.log('Beekeeper info:', data);
+
+  return data as { uuid: string; beekeeper: { id: string;title: string; description: string; } | null; } | null;
 }
 
 
@@ -78,25 +70,37 @@ export async function getProductInfo(uuid: string) {
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
   
   const { data, error } = await supabase
-  .from('batches')
+  .from('batchesnew')
   .select(`
-    uuid,
+    id,
     product:product_id (
       id,
       name,
       mgo_level,
-      size
+      size,
+      review_link,
+      title,
+      title_arabic,
+      image_url
     )
   `)
-  .eq('uuid', uuid)
-  .single();
+  .eq('id', uuid)
+  .maybeSingle();
 
   if (error) {
     console.error('Error fetching product info:', error);
     return null;
   }
 
-  return data;
+  const product = Array.isArray(data?.product) ? data.product[0] : data?.product;
+
+  return {
+    uuid: data?.id,
+    product: product ? {
+      ...product,
+      mgo_level: Number(product.mgo_level)
+    } : null
+  };
 }
 
 export async function getRegionInfo(uuid: string) {
@@ -104,24 +108,52 @@ export async function getRegionInfo(uuid: string) {
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
   
   const { data, error } = await supabase
-  .from('batches')
+  .from('batchesnew')
   .select(`
-    uuid,
+    id,
     region:region_id (
       id,
-      name,
-      description
+      title,
+      description,
+      main_image_url
     )
   `)
-  .eq('uuid', uuid)
-  .single();
+  .eq('id', uuid)
+  .maybeSingle();
 
   if (error) {
     console.error('Error fetching region info:', error);
     return null;
   }
 
-  return data;
-
+  return data as { uuid: string; region: { id: string; title: string; description: string; main_image_url: string; } | null; } | null;
 }
 
+
+export async function getBatchInfo(uuid: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  
+  const { data, error } = await supabase
+  .from('batchesnew')
+  .select(`
+    id,
+    mgo_rating,
+    umf_rating,
+    test_date,
+    notes,
+    potency_report_url,
+    purity_report_url,
+    notes_image_url
+  `)
+  .eq('id', uuid)
+  .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching batch info:', error);
+    return null;
+  }
+  console.log('Batch info:', data);
+
+  return data as { id: string; mgo_rating: number; umf_rating: number; test_date: string; notes: string; potency_report_url: string; purity_report_url: string; notes_image_url: string; } | null;
+}

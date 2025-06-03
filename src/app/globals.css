@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Moretmnk';
+  src: url('/fonts/Moretmnk-Regular.woff2') format('woff2'),
+       url('/fonts/Moretmnk-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Moretmnk';
+  src: url('/fonts/Moretmnk-Bold.woff2') format('woff2'),
+       url('/fonts/Moretmnk-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #F6C463;
   --foreground: #171717;
+  --font-moretmnk: 'Moretmnk', serif;
 }
 
 @theme inline {
@@ -10,6 +29,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-primary: var(--font-moretmnk);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +42,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-primary), Arial, Helvetica, sans-serif;
 }
