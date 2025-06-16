@@ -15,9 +15,15 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.1.0",
+    "i18next-http-backend": "^3.0.2",
     "next": "15.3.2",
+    "next-intl": "^4.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-countup": "^6.5.3",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.5.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -28,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "video.js": "^8.22.0"
   }
 }

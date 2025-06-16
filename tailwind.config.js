@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         moretmnk: ['Moretmnk', 'serif'],
+        metrosans: ['MetroSans', 'sans-serif'],
       },
     },
   },

@@ -3,51 +3,116 @@
 import { saveUserEmail } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
 import { BuilderComponent } from './builder-provider';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface EmailFormProps {
   uuid: string;
+  locale: string;
 }
 
-export default function EmailForm({ uuid }: EmailFormProps) {
+export default function EmailForm({ uuid, locale }: EmailFormProps) {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+  const normalizedLocale = i18n.language?.split('-')[0] || 'en';
+  useEffect(() => {
+    if (locale && i18n.language !== locale) {
+      i18n.changeLanguage(locale);
+    }
+  }, [locale, i18n]);
+  // Track page view when component mounts
+  useEffect(() => {
+    // Google Analytics page view
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_title: 'Email Form',
+        page_location: window.location.href,
+        page_path: window.location.pathname
+      });
+    }
 
-  const handleEmailSubmit = async (email: string) => {
+    // Hotjar page view
+    if (typeof window !== 'undefined' && window.hj) {
+      window.hj('event', 'email_form_viewed');
+    }
+
+    // Klaviyo page view
+    if (typeof window !== 'undefined' && window._learnq) {
+      window._learnq.push(['track', 'Email Form Viewed', {
+        'Page URL': window.location.href,
+        'UUID': uuid
+      }]);
+    }
+  }, [uuid]);
+
+  const handleEmailSubmit = async (email: string, communications: boolean) => {
     try {
-      await saveUserEmail(email);
+      await saveUserEmail(email, communications, uuid);
       
+      // Google Analytics event tracking
       if (typeof window !== 'undefined' && window.gtag) {
         window.gtag('event', 'email_submitted', {
           'event_category': 'engagement',
           'event_label': 'email_form',
-          'value': 1
+          'value': 1,
+          'email_length': email.length,
+          'form_location': 'email_form',
+          'uuid': uuid
         });
       }
 
+      // Hotjar event tracking
       if (typeof window !== 'undefined' && window.hj) {
         window.hj('event', 'email_submitted');
       }
 
+      // Klaviyo event tracking
       if (typeof window !== 'undefined' && window._learnq) {
         window._learnq.push(['track', 'Email Submitted', {
           'Email': email,
-          'UUID': uuid
+          'UUID': uuid,
+          'Form Location': 'email_form',
+          'Email Length': email.length
         }]);
       }
 
       router.push(`/${uuid}`);
-    } catch {
+    } catch (error) {
+      // Track failed submissions
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'email_submission_failed', {
+          'event_category': 'error',
+          'event_label': 'email_form',
+          'error_message': error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+
+      if (typeof window !== 'undefined' && window.hj) {
+        window.hj('event', 'email_submission_failed');
+      }
+
       return false;
     }
     return true;
   };
 
   return (
+    <div className={`${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
     <BuilderComponent
       model="figma-imports"
       entry="33a66c32ccc64bcb8ec1cf4daf73948d"
-      context={{
-        handleEmailSubmit: handleEmailSubmit
+      locale={normalizedLocale}
+        context={{
+        handleEmailSubmit: handleEmailSubmit,
+      }}
+      data= {{
+        translations: {
+          description: t('emailform_description'),
+          disclaimer: t('emailform_disclaimer'),
+          submit: t('emailform_submit')
+        }
       }}
     />
+    </div>
   );
 }

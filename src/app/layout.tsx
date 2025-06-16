@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { BuilderProvider } from "@/components/builder-provider";
+import { I18nProvider } from "@/components/i18n-provider";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,6 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const locale = 'en';
   return (
     <html lang="en">
       <head>
@@ -57,9 +60,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
       >
-        <BuilderProvider>
-          {children}
-        </BuilderProvider>
+        <I18nProvider>
+          <BuilderProvider locale={locale}>
+            <LanguageSwitcher />
+            {children}
+          </BuilderProvider>
+        </I18nProvider>
       </body>
     </html>
   );

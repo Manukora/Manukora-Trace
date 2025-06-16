@@ -1,4 +1,4 @@
-import { checkUUIDExists, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo } from '@/actions/actions';
+import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo } from '@/actions/actions';
 import BuilderWrapper from '@/components/builder-wrapper';
 import EmailForm from '@/components/email-form';
 import { notFound } from 'next/navigation';
@@ -6,8 +6,8 @@ import { notFound } from 'next/navigation';
 export default async function BatchPage({ params }: { params: { uuid: string } }) {
   const { uuid } = await params;
 
-  const exists = await checkUUIDExists(uuid);
-  if (!exists) {
+  const batchId = await getBatchIdFromUUID(uuid);
+  if (!batchId) {
     notFound();
   }
 
@@ -19,7 +19,7 @@ export default async function BatchPage({ params }: { params: { uuid: string } }
   ]);
 
   const email = await getUserEmail();
-  
+  const locale = "en";
   return (
     <div className="flex flex-col items-center min-h-screen w-full bg-gray-50">
       <div className="w-full">
@@ -32,7 +32,7 @@ export default async function BatchPage({ params }: { params: { uuid: string } }
       </div>
       {!email && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <EmailForm uuid={uuid} />
+            <EmailForm locale={locale} uuid={uuid} />
         </div>
       )}
     </div>

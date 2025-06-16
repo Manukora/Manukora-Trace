@@ -3,8 +3,11 @@
 import { BuilderComponent } from '@builder.io/react';
 import { useEffect, useState } from 'react';
 import { builder } from '@/builder-registry';
+import '../builder-registry'; // Import the registry to ensure components are registered
+import '../i18n';
+import { BuilderContext } from '@builder.io/sdk-react';
 
-export function BuilderProvider({ children }: { children: React.ReactNode }) {
+export function BuilderProvider({ children, locale }: { children: React.ReactNode, locale: string }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -18,7 +21,11 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  return <>{children}</>;
+  return (
+    <BuilderContext.Provider value={{ locale }}>
+      {children}
+    </BuilderContext.Provider>
+  );
 }
 
 export { BuilderComponent }; 
