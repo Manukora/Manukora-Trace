@@ -13,7 +13,7 @@ export default function Faq({ locale }: { locale: string }) {
       }, [locale, i18n]);
 
     return (
-        <div className={`w-screen relative bg-[#f1e5cf] ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
+        <div className={`w-screen bg-[#fbf7ec] relative ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
         <div className="faq-section max-w-[1200px] mx-auto px-4">
           <div className="faq-title">
             <h2 style={{ fontFamily: 'var(--font-moretmnk)', fontWeight: 400 }}>{t('faq_title')}</h2>

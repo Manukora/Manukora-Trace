@@ -271,7 +271,7 @@ export default function BuilderWrapper({
           data={{
             link: `https://junip.co/forms/review/onsite/product?product_id=${productData?.product?.junip_id}&store_key=piDpeYVw4zaChuvPmrXsejph`,
               translations: {
-                title: t('review_link_title')
+                linktitle: t('review_linktitle') === 'review_linktitle' ? 'Leave a review' : t('review_linktitle')
               }
             }}
             locale={normalizedLocale}

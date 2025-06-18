@@ -242,7 +242,7 @@ body {
 /* FAQ Section Styles */
 .faq-section {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
 }
 
 .faq-title {
