@@ -55,6 +55,7 @@
     "textreview_last_initial": "ف",
     "review_link_title": "اترك مراجعة",
     "emailform_description": "يرجى تقديم بريدك الإلكتروني لإكمال عملية التحقق من المنتج",
-    "emailform_disclaimer": "اشترك في النشرة الإخبارية من Manukora للحصول على نصائح وطرق لاستخدام عسل مانوكا الخاص بك",
-    "emailform_submit": "إرسال"
+    "emailform_disclaimer": "اشترك في النشرة الإخبارية من Manukora للحصول على نصائح وطرق لاستخدام عسلك الخاص",
+    "emailform_submit": "إرسال",
+    "measurements": "ملغ/كغ"
 }

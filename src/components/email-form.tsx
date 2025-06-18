@@ -45,11 +45,13 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
     }
   }, [uuid]);
 
-  const handleEmailSubmit = async (email: string, communications: boolean) => {
+  const handleEmailSubmit = async (email: string | null, phone_number: string | null, comms: string) => {
     try {
-      await saveUserEmail(email, communications, uuid);
+      await saveUserEmail(email, phone_number, comms, uuid);
+      console.log("comms", comms);
       
       // Google Analytics event tracking
+      if (email) {
       if (typeof window !== 'undefined' && window.gtag) {
         window.gtag('event', 'email_submitted', {
           'event_category': 'engagement',
@@ -75,6 +77,33 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
           'Email Length': email.length
         }]);
       }
+    }
+
+    if (phone_number) {
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'phone_number_submitted', {
+          'event_category': 'engagement',
+          'event_label': 'phone_number_form',
+          'value': 1,
+          'phone_number_length': phone_number.length, 
+          'form_location': 'phone_number_form',
+          'uuid': uuid
+        });
+      }
+
+      if (typeof window !== 'undefined' && window.hj) {
+        window.hj('event', 'phone_number_submitted');
+      }
+
+      if (typeof window !== 'undefined' && window._learnq) {
+        window._learnq.push(['track', 'Phone Number Submitted', {
+          'Phone Number': phone_number,
+          'UUID': uuid,
+          'Form Location': 'phone_number_form',
+          'Phone Number Length': phone_number.length
+        }]);
+      }
+    }
 
       router.push(`/${uuid}`);
     } catch (error) {
@@ -97,7 +126,7 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
   };
 
   return (
-    <div className={`${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+    <div className={`font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
     <BuilderComponent
       model="figma-imports"
       entry="33a66c32ccc64bcb8ec1cf4daf73948d"
@@ -106,6 +135,8 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
         handleEmailSubmit: handleEmailSubmit,
       }}
       data= {{
+        show_email: !(normalizedLocale === 'ar'),
+        show_phone_number: (normalizedLocale === 'ar'),
         translations: {
           description: t('emailform_description'),
           disclaimer: t('emailform_disclaimer'),

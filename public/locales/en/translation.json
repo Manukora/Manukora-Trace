@@ -55,6 +55,7 @@
     "textreview_last_initial": "S",
     "review_link_title": "Leave a review",
     "emailform_description": "Please provide your email to complete the product authentication process",
-    "emailform_disclaimer": "Subscribe to Manukora's newsletter for tips and ways to use your Manuka Honey",
-    "emailform_submit": "Submit"
+    "emailform_disclaimer": "Subscribe to Manukora's newsletter for tips and ways to use your honey",
+    "emailform_submit": "Submit",
+    "measurements": "mg/kg"
 }

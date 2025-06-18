@@ -38,29 +38,23 @@ export async function getUserEmail() {
   return email?.value || null;
 }
 
-export async function saveUserEmail(email: string, communications: boolean, uuid: string) {
+export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
 
-
   const { error } = await supabase
   .from('emails')
-  .insert({ email: email, code: uuid, product_id: (await getProductInfo(uuid))?.product?.id, batch_id: await getBatchIdFromUUID(uuid), created_at: new Date().toISOString() })
+  .insert({ email: email, phone_number: phone_number, code: uuid, product_id: (await getProductInfo(uuid))?.product?.id, batch_id: await getBatchIdFromUUID(uuid), created_at: new Date().toISOString() })
   .select()
   .single();
-
-  if (error) {
+  console.log("communications", comms);
+  if (error || (!email && !phone_number)) {
     console.error('Error saving user email:', error);
     return false;
   }
 
-  if (communications) {
-    //sign up for the newsletter here
-    console.log('signing up for the newsletter');
-  }
-
   // @ts-expect-error - cookies() API is typed incorrectly in Next.js
-  cookieStore.set('user_email', email, {
+  cookieStore.set('user_email', email || phone_number, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

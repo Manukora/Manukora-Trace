@@ -15,6 +15,7 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
+    "framer-motion": "^12.18.1",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.1.0",
     "i18next-http-backend": "^3.0.2",
@@ -23,7 +24,8 @@
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
-    "react-i18next": "^15.5.2"
+    "react-i18next": "^15.5.2",
+    "react-modal-sheet": "^4.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

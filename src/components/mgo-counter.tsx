@@ -6,10 +6,9 @@ export const MgoCounter = ({ mgo_rating = 0, mgo_level = 0 }: {mgo_rating?: numb
     fontSize: "3rem",
     fontWeight: "bold",
     color: "#000000",
-    borderRadius: "1rem",
-    padding: "1rem 2rem",
     display: "inline-block",
-    boxShadow: "0 4px 20px rgba(80,130,255,0.15)"
+    minWidth: "8rem",
+    textAlign: "center",
   }}>
     <CountUp
       start={mgo_level}

@@ -101,7 +101,8 @@ export default function BuilderWrapper({
               mgo_rating: batchData?.mgo_rating || 0,
               translations: {
                 title: t('header_title'),
-                mgo_label: t('header_mgo_label')
+                mgo_label: t('header_mgo_label'),
+                measurements: t('measurements')
               }
             }}
             locale={normalizedLocale}
@@ -153,6 +154,7 @@ export default function BuilderWrapper({
                 residue: t('testresults_residue'),
                 residue_description: t('testresults_residue_description'),
                 report: t('testresults_report'),
+                measurements: t('measurements')
               }
             }}
             locale={normalizedLocale}
@@ -229,7 +231,7 @@ export default function BuilderWrapper({
             locale={normalizedLocale}
         />
       </div>
-      
+
         <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
         <BuilderComponent
           model="figma-imports"
@@ -274,8 +276,8 @@ export default function BuilderWrapper({
             }}
             locale={normalizedLocale}
         />
-      </div>
-
+            </div>
+          
         {/* Full width sections */}
         
         <Faq locale={normalizedLocale} />
@@ -293,7 +295,7 @@ export default function BuilderWrapper({
             locale={normalizedLocale}
         />
       </div>
-
+    
         <Footer />
       </div>
     </>
