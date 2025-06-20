@@ -6,6 +6,7 @@ import Faq from './faq';
 import Footer from './footer';
 import '../builder-registry';
 import { useTranslation } from 'react-i18next';
+import Review from './review';
 
 type BeekeeperData = {
   uuid: string;
@@ -43,6 +44,8 @@ type RegionData = {
     description: string;
     description_arabic: string;
     region_image: string;
+    region_image_2: string;
+    region_image_3: string;
     map_image: string;
   } | null;
 } | null;
@@ -186,6 +189,8 @@ export default function BuilderWrapper({
               title: (normalizedLocale === 'ar' ? regionData?.region?.title_arabic : regionData?.region?.title) || null,
               description: (normalizedLocale === 'ar' ? regionData?.region?.description_arabic : regionData?.region?.description) || null,
               region_image: regionData?.region?.region_image || null,
+              region_image_2: regionData?.region?.region_image_2 || null,
+              region_image_3: regionData?.region?.region_image_3 || null,
               map_image: regionData?.region?.map_image || null,
               translations: {
                 title: t('region_title'),
@@ -262,7 +267,7 @@ export default function BuilderWrapper({
         />
       </div>
 
-      */}
+      
 
 <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
         <BuilderComponent
@@ -277,6 +282,9 @@ export default function BuilderWrapper({
             locale={normalizedLocale}
         />
             </div>
+            */}
+
+            <Review locale={normalizedLocale} reviewLink={`https://junip.co/forms/review/onsite/product?product_id=${productData?.product?.junip_id}&store_key=piDpeYVw4zaChuvPmrXsejph`} reviewTitle={t('review_linktitle')} />
           
         {/* Full width sections */}
         

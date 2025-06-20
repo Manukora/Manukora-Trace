@@ -41,10 +41,16 @@ export async function getUserEmail() {
 export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  let newsletterSignup = false;
+  if (comms === null) { 
+    newsletterSignup = false;
+  } else {
+    newsletterSignup = true;
+  }
 
   const { error } = await supabase
   .from('emails')
-  .insert({ email: email, phone_number: phone_number, code: uuid, product_id: (await getProductInfo(uuid))?.product?.id, batch_id: await getBatchIdFromUUID(uuid), created_at: new Date().toISOString() })
+  .insert({ email: email, phone_number: phone_number, newsletter: newsletterSignup, code: uuid, product_id: (await getProductInfo(uuid))?.product?.id, batch_id: await getBatchIdFromUUID(uuid), created_at: new Date().toISOString() })
   .select()
   .single();
   console.log("communications", comms);
@@ -154,7 +160,9 @@ export async function getRegionInfo(uuid: string) {
         description,
         description_arabic,
         region_image,
-        map_image
+        map_image,
+        region_image_2,
+        region_image_3
       )
     `)
     .eq('id', batchId)
@@ -165,7 +173,7 @@ export async function getRegionInfo(uuid: string) {
     return null;
   }
 
-  return data as { uuid: string; region: { id: string; title: string; title_arabic: string; description: string; description_arabic: string; region_image: string; map_image: string; } | null; } | null;
+  return data as { uuid: string; region: { id: string; title: string; title_arabic: string; description: string; description_arabic: string; region_image: string; region_image_2: string; region_image_3: string; map_image: string; } | null; } | null;
 }
 
 export async function getBatchInfo(uuid: string) {

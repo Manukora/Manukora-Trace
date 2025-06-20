@@ -48,7 +48,6 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
   const handleEmailSubmit = async (email: string | null, phone_number: string | null, comms: string) => {
     try {
       await saveUserEmail(email, phone_number, comms, uuid);
-      console.log("comms", comms);
       
       // Google Analytics event tracking
       if (email) {
