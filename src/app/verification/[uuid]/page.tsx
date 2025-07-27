@@ -2,9 +2,7 @@ import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, ge
 import { notFound } from 'next/navigation';
 import BatchPageClient, { IngredientData } from '../../../components/BatchPageClient';
 
-export async function generateStaticParams() {
-  return [];
-}
+export const dynamic = 'force-dynamic';
 
 export default async function BatchPage({ params }: { params: Promise<{ uuid: string }> }) {
   const { uuid } = await params;
