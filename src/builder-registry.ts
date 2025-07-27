@@ -1,5 +1,6 @@
 import { Builder } from '@builder.io/react';
 import { MgoCounter } from './components/mgo-counter';
+import { PDFEmbed } from './components/pdf-embed';
 
 if (!process.env.NEXT_PUBLIC_BUILDER_API_KEY) {
   throw new Error('NEXT_PUBLIC_BUILDER_API_KEY is not defined');
@@ -29,6 +30,11 @@ Builder.register('figma-imports', {
       name: 'mgo_rating',
       type: 'number',
       defaultValue: 0
+    },
+    {
+      name: 'pdfUrl',
+      type: 'string',
+      defaultValue: ''
     }
   ]
 });
@@ -54,6 +60,33 @@ Builder.registerComponent(MgoCounter, {
   image: 'https://cdn.builder.io/api/v1/image/assets%2Fpwgjf0RoYWbdnJSbpBAjXNRMe9F2%2Ffb27a7c790324294af8be1c35fe30f4d',
   description: 'Animated MGO counter component that displays the MGO rating with a counting animation'
 });
+
+// Register the PDF Embed component
+Builder.registerComponent(PDFEmbed, {
+  name: 'PDFEmbed',
+  inputs: [
+    {
+      name: 'pdfUrl',
+      type: 'string',
+      required: true,
+      defaultValue: '',
+      helperText: 'URL of the PDF file to display'
+    },
+    {
+      name: 'title',
+      type: 'string',
+      required: true,
+      defaultValue: '',
+      helperText: 'Title of the PDF file to display'
+    }
+  ],
+  models: ['figma-imports'],
+  canHaveChildren: false,
+  defaultChildren: [],
+  image: 'https://cdn.builder.io/api/v1/image/assets%2Fpwgjf0RoYWbdnJSbpBAjXNRMe9F2%2Ffb27a7c790324294af8be1c35fe30f4d',
+  description: 'PDF viewer component that displays a PDF file with navigation controls'
+});
+
 /*
 Builder.registerComponent(FullReview, {
   name: 'FullReview',

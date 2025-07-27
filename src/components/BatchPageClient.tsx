@@ -4,7 +4,7 @@ import BuilderWrapper from '@/components/builder-wrapper';
 import EmailForm from '@/components/email-form';
 import DragUp from '@/components/drag-up';
 
-type BeekeeperData = {
+export type BeekeeperData = {
   uuid: string;
   beekeeper: {
     id: string;
@@ -17,11 +17,10 @@ type BeekeeperData = {
   } | null;
 } | null;
 
-type ProductData = {
+export type ProductData = {
   uuid: string;
   product: {
     id: string;
-    name: string;
     mgo_level: number;
     size: string;
     title: string;
@@ -31,7 +30,7 @@ type ProductData = {
   } | null;
 } | null;
 
-type RegionData = {
+export type RegionData = {
   uuid: string;
   region: {
     id: string;
@@ -39,27 +38,48 @@ type RegionData = {
     title_arabic: string;
     description: string;
     description_arabic: string;
-    region_image: string;
-    map_image: string;
+    region_image_url: string;
+    region_image_url_2: string;
+    region_image_url_3: string;
+    map_image_url: string;
   } | null;
 } | null;
 
-type BatchData = {
+export type BatchData = {
   id: string;
   mgo_rating: number;
   umf_rating: number;
   test_date: string;
   notes: string;
+  notes_arabic: string;
   potency_report_url: string;
   purity_report_url: string;
   notes_image_url: string;
 } | null;
 
-export default function BatchPageClient({ beekeeperData, productData, regionData, batchData, locale, uuid, email }: {
-  beekeeperData: unknown;
-  productData: unknown;
-  regionData: unknown;
-  batchData: unknown;
+export type IngredientData = {
+  ingredient: {
+    id: string;
+    title: string;
+    title_arabic: string;
+    region_name: string;
+    story: string;
+    story_arabic: string;
+    benefits: string;
+    benefits_arabic: string;
+    specs: string;
+    specs_arabic: string;
+    ingredient_image_url: string;
+    region_image_url: string;
+  };
+}[] | null;
+
+export default function BatchPageClient({ beekeeperData, productData, regionData, batchData, ingredientsData, locale, uuid, email }: {
+  beekeeperData: BeekeeperData;
+  productData: ProductData;
+  regionData: RegionData;
+  batchData: BatchData;
+  ingredientsData: IngredientData;
   locale: string;
   uuid: string;
   email: string | null;
@@ -73,6 +93,7 @@ export default function BatchPageClient({ beekeeperData, productData, regionData
           beekeeperData={beekeeperData as BeekeeperData}
           productData={productData as ProductData}
           regionData={regionData as RegionData}
+          ingredientsData={ingredientsData as IngredientData}
           batchData={batchData as BatchData}
         />
       </div>

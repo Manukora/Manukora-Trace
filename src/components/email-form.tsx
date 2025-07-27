@@ -3,8 +3,28 @@
 import { saveUserEmail } from '@/actions/actions';
 import { useRouter } from 'next/navigation';
 import { BuilderComponent } from './builder-provider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+// Function to detect OS
+const getOperatingSystem = () => {
+  if (typeof window === 'undefined') return '';
+  const userAgent = window.navigator.userAgent;
+  
+  if (userAgent.indexOf('Win') !== -1) return 'Windows';
+  if (userAgent.indexOf('Mac') !== -1) return 'MacOS';
+  if (userAgent.indexOf('Linux') !== -1) return 'Linux';
+  if (userAgent.indexOf('Android') !== -1) return 'Android';
+  if (userAgent.indexOf('iOS') !== -1 || userAgent.indexOf('iPhone') !== -1 || userAgent.indexOf('iPad') !== -1) return 'iOS';
+  
+  return 'Unknown';
+};
+
+// Function to detect device type
+const getDeviceType = () => {
+  if (typeof window === 'undefined') return 'desktop';
+  return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+};
 
 interface EmailFormProps {
   uuid: string;
@@ -15,11 +35,31 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const normalizedLocale = i18n.language?.split('-')[0] || 'en';
+  const [deviceType, setDeviceType] = useState('');
+  const [userOS, setUserOS] = useState('');
+
+  useEffect(() => {
+    // Set device type and OS
+    setDeviceType(getDeviceType());
+    setUserOS(getOperatingSystem());
+
+    // Handle window resize for device type
+    const handleResize = () => {
+      setDeviceType(getDeviceType());
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     if (locale && i18n.language !== locale) {
       i18n.changeLanguage(locale);
     }
   }, [locale, i18n]);
+
   // Track page view when component mounts
   useEffect(() => {
     // Google Analytics page view
@@ -47,7 +87,7 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
 
   const handleEmailSubmit = async (email: string | null, phone_number: string | null, comms: string) => {
     try {
-      await saveUserEmail(email, phone_number, comms, uuid);
+      await saveUserEmail(email, phone_number, comms, uuid, 'Unknown', deviceType, userOS);
       
       // Google Analytics event tracking
       if (email) {
@@ -104,7 +144,7 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
       }
     }
 
-      router.push(`/${uuid}`);
+      router.push(`/verification/${uuid}`);
     } catch (error) {
       // Track failed submissions
       if (typeof window !== 'undefined' && window.gtag) {

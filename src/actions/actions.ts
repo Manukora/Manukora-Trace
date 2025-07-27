@@ -2,26 +2,26 @@
 
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from 'next/headers';
+import { BatchData, BeekeeperData, IngredientData, RegionData } from "@/components/BatchPageClient";
 
 export async function getBatchIdFromUUID(uuid: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
-
   const { data: codeData, error: codeError } = await supabase
     .from('individual_codes')
-    .select('code_batch_id')
+    .select('batch_id')
     .eq('id', uuid)
     .maybeSingle();
 
-  if (codeError || !codeData?.code_batch_id) {
-    console.error('Error fetching code_batch_id:', codeError);
+  if (codeError || !codeData?.batch_id) {
+    console.error('Error fetching batch_id:', codeError);
     return null;
   }
 
   const { data: batchData, error: batchError } = await supabase
-    .from('batchesnew')
+    .from('batches')
     .select('id')
-    .eq('code_batch_id', codeData.code_batch_id)
+    .eq('id', codeData.batch_id)
     .maybeSingle();
 
   if (batchError || !batchData?.id) {
@@ -34,13 +34,18 @@ export async function getBatchIdFromUUID(uuid: string) {
 
 export async function getUserEmail() {
   const cookieStore = await cookies();
-  const email = cookieStore.get('user_email');
-  return email?.value || null;
+  const emailCookie = cookieStore.get('user_email');
+  return emailCookie?.value || null;
 }
 
-export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string) {
+export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string, location: string, device: string, os: string) {
   const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  // Create a client with service role key for customer insert
+  const supabaseAdmin = createServerActionClient({ cookies: () => cookieStore }, {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY
+  });
+
   let newsletterSignup = false;
   if (comms === null) { 
     newsletterSignup = false;
@@ -48,19 +53,32 @@ export async function saveUserEmail(email: string | null, phone_number: string |
     newsletterSignup = true;
   }
 
-  const { error } = await supabase
-  .from('emails')
-  .insert({ email: email, phone_number: phone_number, newsletter: newsletterSignup, code: uuid, product_id: (await getProductInfo(uuid))?.product?.id, batch_id: await getBatchIdFromUUID(uuid), created_at: new Date().toISOString() })
-  .select()
-  .single();
-  console.log("communications", comms);
+  // Use supabaseAdmin for customer insert to bypass RLS
+  const { error } = await supabaseAdmin
+    .from('customers')
+    .insert({ 
+      email: email, 
+      phone_number: phone_number, 
+      newsletter: newsletterSignup, 
+      code: uuid, 
+      location: location,
+      device: device,
+      OS: os,
+      product_id: (await getProductInfo(uuid))?.product?.id, 
+      batch_id: await getBatchIdFromUUID(uuid), 
+      created_at: new Date().toISOString() 
+    })
+    .select()
+    .single();
+
   if (error || (!email && !phone_number)) {
     console.error('Error saving user email:', error);
     return false;
   }
 
+  const cookieValue = email || phone_number || '';
   // @ts-expect-error - cookies() API is typed incorrectly in Next.js
-  cookieStore.set('user_email', email || phone_number, {
+  cookieStore.set('user_email', cookieValue, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -77,7 +95,7 @@ export async function getBeekeeperInfo(uuid: string) {
   if (!batchId) return null;
 
   const { data, error } = await supabase
-    .from('batchesnew')
+    .from('batches')
     .select(`
       id,
       beekeeper:beekeeper_id (
@@ -98,7 +116,7 @@ export async function getBeekeeperInfo(uuid: string) {
     return null;
   }
 
-  return data as { uuid: string; beekeeper: { id: string; title: string; title_arabic: string; description: string; description_arabic: string; video_url: string; image_url: string; } | null; } | null;
+  return data as BeekeeperData;
 }
 
 export async function getProductInfo(uuid: string) {
@@ -109,12 +127,11 @@ export async function getProductInfo(uuid: string) {
   if (!batchId) return null;
 
   const { data, error } = await supabase
-    .from('batchesnew')
+    .from('batches')
     .select(`
       id,
       product:product_id (
         id,
-        name,
         mgo_level,
         size,
         title,
@@ -150,7 +167,7 @@ export async function getRegionInfo(uuid: string) {
   if (!batchId) return null;
 
   const { data, error } = await supabase
-    .from('batchesnew')
+    .from('batches')
     .select(`
       id,
       region:region_id (
@@ -159,10 +176,10 @@ export async function getRegionInfo(uuid: string) {
         title_arabic,
         description,
         description_arabic,
-        region_image,
-        map_image,
-        region_image_2,
-        region_image_3
+        map_image_url,
+        region_image_url,
+        region_image_url_2,
+        region_image_url_3
       )
     `)
     .eq('id', batchId)
@@ -173,7 +190,7 @@ export async function getRegionInfo(uuid: string) {
     return null;
   }
 
-  return data as { uuid: string; region: { id: string; title: string; title_arabic: string; description: string; description_arabic: string; region_image: string; region_image_2: string; region_image_3: string; map_image: string; } | null; } | null;
+  return data as RegionData;
 }
 
 export async function getBatchInfo(uuid: string) {
@@ -184,13 +201,14 @@ export async function getBatchInfo(uuid: string) {
   if (!batchId) return null;
 
   const { data, error } = await supabase
-    .from('batchesnew')
+    .from('batches')
     .select(`
       id,
       mgo_rating,
       umf_rating,
       test_date,
       notes,
+      notes_arabic,
       potency_report_url,
       purity_report_url,
       notes_image_url
@@ -202,5 +220,40 @@ export async function getBatchInfo(uuid: string) {
     console.error('Error fetching batch info:', error);
     return null;
   }
-  return data as { id: string; mgo_rating: number; umf_rating: number; test_date: string; notes: string; potency_report_url: string; purity_report_url: string; notes_image_url: string; } | null;
+  return data as BatchData;
+}
+
+// Fetch all ingredients associated with a given product via the product_ingredients join table
+export async function getIngredientsInfo(uuid: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const productId = await getProductInfo(uuid);
+
+  // Adjust the select fields as needed for your schema
+  const { data, error } = await supabase
+    .from('product_ingredients')
+    .select(`
+      ingredient:ingredient_id (
+        id,
+        title,
+        title_arabic,
+        region_name,
+        story,
+        story_arabic,
+        benefits,
+        benefits_arabic,
+        specs,
+        specs_arabic,
+        ingredient_image_url,
+        region_image_url
+      )
+    `)
+    .eq('product_id', productId?.product?.id);
+
+  if (error) {
+    console.error('Error fetching ingredients info:', error);
+    return null;
+  }
+
+  return data as unknown as IngredientData;
 }
