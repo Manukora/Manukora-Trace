@@ -1,6 +1,7 @@
 import { Builder } from '@builder.io/react';
 import { MgoCounter } from './components/mgo-counter';
 import { PDFEmbed } from './components/pdf-embed';
+import InfoModal from './components/info-modal';
 
 if (!process.env.NEXT_PUBLIC_BUILDER_API_KEY) {
   throw new Error('NEXT_PUBLIC_BUILDER_API_KEY is not defined');
@@ -85,6 +86,25 @@ Builder.registerComponent(PDFEmbed, {
   defaultChildren: [],
   image: 'https://cdn.builder.io/api/v1/image/assets%2Fpwgjf0RoYWbdnJSbpBAjXNRMe9F2%2Ffb27a7c790324294af8be1c35fe30f4d',
   description: 'PDF viewer component that displays a PDF file with navigation controls'
+});
+
+Builder.registerComponent(InfoModal, {
+  name: 'InfoModal',
+  inputs: [{
+    name: 'title',
+    type: 'string',
+    defaultValue: ''
+  },
+  {
+    name: 'description',
+    type: 'string',
+    defaultValue: ''
+  }],
+  models: ['figma-imports'],
+  canHaveChildren: false,
+  defaultChildren: [],
+  image: 'https://cdn.builder.io/api/v1/image/assets%2Fpwgjf0RoYWbdnJSbpBAjXNRMe9F2%2Ffb27a7c790324294af8be1c35fe30f4d',
+  description: 'Info modal component'
 });
 
 /*

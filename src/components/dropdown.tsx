@@ -11,7 +11,7 @@ export default function Dropdown({ title, title_text, children }: HoneyDropdownP
   const [open, setOpen] = useState(title == "Honey" ? true : false);
 
   return (
-    <div className="w-full bg-[#fbf7ec] p-0 m-0 py-4">
+    <div className="w-full bg-[#fbf7ec] p-0 m-0 py-4 border-b border-[#23201C]">
       <div className="mx-auto flex justify-center w-[350px]">
         <div className="text-left">
           <div className="flex items-center gap-2 justify-between">

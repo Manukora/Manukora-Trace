@@ -63,10 +63,10 @@ export default function BuilderWrapper({
               title: productData?.product?.title, // This is the title that determines styling
               title_text: (normalizedLocale === 'ar' ? productData?.product?.title_arabic : productData?.product?.title) || null,
               image_url: productData?.product?.image_url || null,
-              ingredients: ingredientsData != null,
+              ingredients: ingredientsData != null && ingredientsData.length > 0,
               color: "#FFFFFF",
               translations: {
-                title: ingredientsData == null ? t('jar_title') : t('jar_title_ingredients'),
+                title: ingredientsData == null || ingredientsData.length == 0 ? t('jar_title') : t('jar_title_ingredients'),
                 subtitle: t('jar_subtitle'),
                 digestive_benefit: t('jar_digestive_benefit'),
                 immune_benefit: t('jar_immune_benefit'),
@@ -81,7 +81,7 @@ export default function BuilderWrapper({
         />
       </div>
 
-      {ingredientsData != null ? (
+      {ingredientsData != null && ingredientsData.length > 0 ? (
         <Dropdown title_text={normalizedLocale === 'ar' ? "عسل" : "Honey"} title="Honey">
           <div className="max-w-[350px] mx-auto">
             <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
@@ -109,6 +109,9 @@ export default function BuilderWrapper({
                       digestive_benefit: t('jar_digestive_benefit'),
                       immune_benefit: t('jar_immune_benefit'),
                       energy_benefit: t('jar_energy_benefit'),
+                      mgo_modal: t('testresults_mgomodal'),
+                      umf_modal: t('testresults_umfmodal'),
+                      glyphosate_modal: t('testresults_glyphosatemodal'),
                     }
                   }}
                   locale={normalizedLocale}
@@ -376,7 +379,7 @@ export default function BuilderWrapper({
         {/* Full width sections */}
         
         <Faq locale={normalizedLocale} />
-        {ingredientsData == null ? (
+        {ingredientsData == null || ingredientsData.length == 0 ? (
         <div className={`w-screen relative font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
         <BuilderComponent
           model="figma-imports"

@@ -5,7 +5,6 @@
     "jar_immune_benefit": "Immune Support",
     "jar_energy_benefit": "Natural Energy",
     "jar_title": "Each jar has its own story",
-    "jar_title_ingredients": "Each ingredient has its own story",
     "jar_subtitle": "EXPLORE YOURS",
     "jar_section_one": "Test Results",
     "jar_section_two": "Beekeeper",
@@ -19,8 +18,7 @@
     "testresults_glyphosate": "Glyphosate",
     "testresults_residue": "Glyphosate Residue Free",
     "testresults_residue_description": "A strictly low detection threshold (<0.002) test confirmed no traces in the honey. Our bees thrive in Mānuka forests in remote corners of New Zealand, untouched by environmental toxins.",
-    "testresults_potency_report": "View Potency Report",
-    "testresults_purity_report": "View Purity Report",
+    "testresults_report": "View Report",
     "beekeeper_title": "Beekeeper",
     "region_title": "Region",
     "tastingnotes_title": "Tasting Notes",
@@ -61,5 +59,12 @@
     "emailform_disclaimer": "Subscribe to Manukora's newsletter for tips and ways to use your honey",
     "measurements": "mg\/kg",
     "additionalfacts_title": "Raw Mānuka honey - the smartest carrier on Earth",
-    "additionalfacts_description": "Mānuka honey acts as a natural carrier to enhance bioavailability. Its enzymes and sugars help transport nutrients more efficiently into the bloodstream. Unlike capsules or tablets, honey supports faster absorption by coating and delivering active compounds directly through mucous membranes, making it an ideal carrier for functional ingredients."
+    "additionalfacts_description": "Mānuka honey acts as a natural carrier to enhance bioavailability. Its enzymes and sugars help transport nutrients more efficiently into the bloodstream. Unlike capsules or tablets, honey supports faster absorption by coating and delivering active compounds directly through mucous membranes, making it an ideal carrier for functional ingredients.",
+    "jar_title_ingredients": "Each ingredient has its own story",
+    "testresults_mgomodal": "MGO is a unique naturally-occurring chemical compound found in Manuka honey that gives it its unique antibacterial properties.",
+    "testresults_umfmodal": "UMF stands for 'Unique Mānuka Factor', which reflects the concentration of 3 signature compounds found in genuine Mānuka honey, MGO, DHA and leptosperin. It is designed to provide absolute assurance of authenticity and potency.",
+    "testresults_glyphosatemodal": "Glyphosate is a broad-spectrum systemic herbicide and crop desiccant.",
+    "close": "Close",
+    "testresults_potency_report": "Full Potency Report",
+    "testresults_purity_report": "Full Purity Report"
 }
