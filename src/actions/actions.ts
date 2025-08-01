@@ -257,3 +257,15 @@ export async function getIngredientsInfo(uuid: string) {
 
   return data as unknown as IngredientData;
 }
+
+export async function saveScanError(uuid: string) {
+  const cookieStore = cookies();
+  const supabaseAdmin = createServerActionClient({ cookies: () => cookieStore }, {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY
+  });
+  const { error } = await supabaseAdmin.from('scan_errors').insert({ uuid: uuid });
+  if (error) {
+    console.error('Error saving scan error:', error);
+  }
+}

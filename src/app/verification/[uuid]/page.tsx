@@ -1,4 +1,4 @@
-import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo, getIngredientsInfo } from '@/actions/actions';
+import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo, getIngredientsInfo, saveScanError } from '@/actions/actions';
 import { notFound } from 'next/navigation';
 import BatchPageClient, { IngredientData } from '../../../components/BatchPageClient';
 
@@ -7,7 +7,10 @@ export const dynamic = 'force-dynamic';
 export default async function BatchPage({ params }: { params: Promise<{ uuid: string }> }) {
   const { uuid } = await params;
   const batchId = await getBatchIdFromUUID(uuid);
-  if (!batchId) notFound();
+  if (!batchId) {
+    await saveScanError(uuid);
+    notFound();
+  }
 
   const [beekeeperData, productData, regionData, batchData, ingredientsData] = await Promise.all([
     getBeekeeperInfo(uuid),

@@ -12,7 +12,7 @@ export default function NotFound() {
           className="w-full h-auto mb-6"
           priority
         />
-        <h1 className="text-xl font-medium text-gray-900">Batch not found</h1>
+        <h1 className="text-xl font-medium text-gray-900">Thanks for stopping by! Your honey is genuine, authentic Manukora Mānuka honey, we&apos;re just working in the background to get your QR code uploaded. Please send through a clear photo of the QR code and batch number from your jar or box to admin@authenticate.nz and one of our Manuka Specialists will be in touch with you to resolve this.</h1>
       </div>
     </div>
   );
