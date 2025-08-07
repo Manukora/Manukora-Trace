@@ -11,11 +11,15 @@ const getOperatingSystem = () => {
   if (typeof window === 'undefined') return '';
   const userAgent = window.navigator.userAgent;
   
-  if (userAgent.indexOf('Win') !== -1) return 'Windows';
-  if (userAgent.indexOf('Mac') !== -1) return 'MacOS';
-  if (userAgent.indexOf('Linux') !== -1) return 'Linux';
-  if (userAgent.indexOf('Android') !== -1) return 'Android';
-  if (userAgent.indexOf('iOS') !== -1 || userAgent.indexOf('iPhone') !== -1 || userAgent.indexOf('iPad') !== -1) return 'iOS';
+  // More comprehensive OS detection
+  if (/Android/i.test(userAgent)) return 'Android';
+  if (/iPhone|iPad|iPod/i.test(userAgent)) return 'iOS';
+  if (/Windows/i.test(userAgent)) return 'Windows';
+  if (/Macintosh|Mac OS X/i.test(userAgent)) return 'MacOS';
+  if (/Linux/i.test(userAgent)) return 'Linux';
+  if (/Chrome OS/i.test(userAgent)) return 'ChromeOS';
+  if (/BlackBerry/i.test(userAgent)) return 'BlackBerry';
+  if (/Windows Phone/i.test(userAgent)) return 'Windows Phone';
   
   return 'Unknown';
 };
@@ -23,7 +27,29 @@ const getOperatingSystem = () => {
 // Function to detect device type
 const getDeviceType = () => {
   if (typeof window === 'undefined') return 'desktop';
-  return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+  
+  const userAgent = window.navigator.userAgent;
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  
+  // Check for mobile devices using user agent
+  if (/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(userAgent)) {
+    return 'mobile';
+  }
+  
+  // Check for tablets (iPad specifically)
+  if (/iPad/i.test(userAgent)) {
+    return 'tablet';
+  }
+  
+  // Fallback to screen size detection
+  if (screenWidth <= 768 || screenHeight <= 768) {
+    return 'mobile';
+  } else if (screenWidth <= 1024) {
+    return 'tablet';
+  }
+  
+  return 'desktop';
 };
 
 interface EmailFormProps {

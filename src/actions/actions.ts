@@ -1,12 +1,34 @@
 "use server"
 
-import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from 'next/headers';
 import { BatchData, BeekeeperData, IngredientData, RegionData } from "@/components/BatchPageClient";
 
 export async function getBatchIdFromUUID(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+  
   const { data: codeData, error: codeError } = await supabase
     .from('individual_codes')
     .select('batch_id')
@@ -39,12 +61,30 @@ export async function getUserEmail() {
 }
 
 export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string, location: string, device: string, os: string) {
-  const cookieStore = cookies();
   // Create a client with service role key for customer insert
-  const supabaseAdmin = createServerActionClient({ cookies: () => cookieStore }, {
-    supabaseUrl: process.env.SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY
-  });
+  const cookieStore = await cookies();
+  const supabaseAdmin = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
 
   let newsletterSignup = false;
   if (comms === null) { 
@@ -63,7 +103,7 @@ export async function saveUserEmail(email: string | null, phone_number: string |
       code: uuid, 
       location: location,
       device: device,
-      OS: os,
+      os: os,
       product_id: (await getProductInfo(uuid))?.product?.id, 
       batch_id: await getBatchIdFromUUID(uuid), 
       created_at: new Date().toISOString() 
@@ -77,7 +117,6 @@ export async function saveUserEmail(email: string | null, phone_number: string |
   }
 
   const cookieValue = email || phone_number || '';
-  // @ts-expect-error - cookies() API is typed incorrectly in Next.js
   cookieStore.set('user_email', cookieValue, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -88,8 +127,29 @@ export async function saveUserEmail(email: string | null, phone_number: string |
 }
 
 export async function getBeekeeperInfo(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
 
   const batchId = await getBatchIdFromUUID(uuid);
   if (!batchId) return null;
@@ -120,8 +180,29 @@ export async function getBeekeeperInfo(uuid: string) {
 }
 
 export async function getProductInfo(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
 
   const batchId = await getBatchIdFromUUID(uuid);
   if (!batchId) return null;
@@ -160,8 +241,29 @@ export async function getProductInfo(uuid: string) {
 }
 
 export async function getRegionInfo(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
 
   const batchId = await getBatchIdFromUUID(uuid);
   if (!batchId) return null;
@@ -194,8 +296,29 @@ export async function getRegionInfo(uuid: string) {
 }
 
 export async function getBatchInfo(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
 
   const batchId = await getBatchIdFromUUID(uuid);
   if (!batchId) return null;
@@ -225,8 +348,30 @@ export async function getBatchInfo(uuid: string) {
 
 // Fetch all ingredients associated with a given product via the product_ingredients join table
 export async function getIngredientsInfo(uuid: string) {
-  const cookieStore = cookies();
-  const supabase = createServerActionClient({ cookies: () => cookieStore }, {supabaseUrl: process.env.SUPABASE_URL, supabaseKey: process.env.SUPABASE_ANON_KEY});
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+  
   const productId = await getProductInfo(uuid);
 
   // Adjust the select fields as needed for your schema
@@ -259,11 +404,30 @@ export async function getIngredientsInfo(uuid: string) {
 }
 
 export async function saveScanError(uuid: string) {
-  const cookieStore = cookies();
-  const supabaseAdmin = createServerActionClient({ cookies: () => cookieStore }, {
-    supabaseUrl: process.env.SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY
-  });
+  const cookieStore = await cookies();
+  const supabaseAdmin = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+  
   const { error } = await supabaseAdmin.from('scan_errors').insert({ uuid: uuid });
   if (error) {
     console.error('Error saving scan error:', error);
