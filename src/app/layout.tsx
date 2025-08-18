@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { BuilderProvider } from "@/components/builder-provider";
 import { I18nProvider } from "@/components/i18n-provider";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,9 +25,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const locale = 'en';
+  
+    
   return (
-    <html lang="en">
+    <html>
       <head>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-EWV0FVF81D" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -61,8 +61,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
       >
         <I18nProvider>
-          <BuilderProvider locale={locale}>
-            <LanguageSwitcher />
+          <BuilderProvider>
             {children}
           </BuilderProvider>
         </I18nProvider>

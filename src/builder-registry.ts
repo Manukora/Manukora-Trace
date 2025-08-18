@@ -36,6 +36,31 @@ Builder.register('figma-imports', {
       name: 'pdfUrl',
       type: 'string',
       defaultValue: ''
+    },
+    {
+      name: 'pre_tick_consent',
+      type: 'boolean',
+      defaultValue: false
+    },
+    {
+      name: 'defaultChecked',
+      type: 'boolean',
+      defaultValue: false
+    },
+    {
+      name: 'isChecked',
+      type: 'boolean',
+      defaultValue: false
+    },
+    {
+      name: 'show_email',
+      type: 'boolean',
+      defaultValue: true
+    },
+    {
+      name: 'show_phone_number',
+      type: 'boolean',
+      defaultValue: false
     }
   ]
 });

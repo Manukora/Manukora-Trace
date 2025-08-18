@@ -7,7 +7,12 @@ import '../builder-registry'; // Import the registry to ensure components are re
 import '../i18n';
 import { BuilderContext } from '@builder.io/sdk-react';
 
-export function BuilderProvider({ children, locale }: { children: React.ReactNode, locale: string }) {
+interface BuilderProviderProps {
+  children: React.ReactNode;
+  preTickConsent?: boolean;
+}
+
+export function BuilderProvider({ children, preTickConsent = false }: BuilderProviderProps) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -22,7 +27,7 @@ export function BuilderProvider({ children, locale }: { children: React.ReactNod
   }
 
   return (
-    <BuilderContext.Provider value={{ locale }}>
+    <BuilderContext.Provider value={{ preTickConsent }}>
       {children}
     </BuilderContext.Provider>
   );

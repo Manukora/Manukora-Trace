@@ -5,7 +5,7 @@ import '../builder-registry';
 import { useTranslation } from 'react-i18next';
 import Review from './review';
 import Dropdown from './dropdown';
-import { BeekeeperData, ProductData, RegionData, BatchData, IngredientData } from './BatchPageClient';
+import { BeekeeperData, ProductData, RegionData, BatchData, IngredientData, FAQData } from './BatchPageClient';
 
 interface BuilderWrapperProps {
   beekeeperData: BeekeeperData;
@@ -13,6 +13,7 @@ interface BuilderWrapperProps {
   regionData: RegionData;
   batchData: BatchData;
   ingredientsData: IngredientData;
+  faqData: FAQData;
   locale?: 'en' | 'ar';
 }
 
@@ -21,14 +22,15 @@ export default function BuilderWrapper({
   productData, 
   regionData,
   batchData,
-  ingredientsData
+  ingredientsData,
+  faqData
 }: Omit<BuilderWrapperProps, 'locale'>) {
   const { t, i18n } = useTranslation();
 
   // Use i18n.language as the only source of truth
   const normalizedLocale = i18n.language?.split('-')[0] || 'en';
 
-  if (!beekeeperData || !productData || !regionData || !batchData || !ingredientsData) {
+  if (!beekeeperData || !productData || !regionData || !batchData || !ingredientsData || !faqData) {
     return null;
   }
 
@@ -153,7 +155,7 @@ export default function BuilderWrapper({
                   locale={normalizedLocale}
               />
             </div>
-
+              {ingredientsData && ingredientsData.length > 0 && (
             <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent 
                 model="figma-imports"
@@ -167,6 +169,7 @@ export default function BuilderWrapper({
                   locale={normalizedLocale}
               />
             </div>
+)}
 
             <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent
@@ -302,6 +305,13 @@ export default function BuilderWrapper({
               specs: normalizedLocale === 'ar' ? ingredientWrapper.ingredient.specs_arabic : ingredientWrapper.ingredient.specs,
               region: ingredientWrapper.ingredient.region_name,
               region_image: ingredientWrapper.ingredient.region_image_url,
+              translations: {
+                story: t('ingredients_story'),
+                benefits: t('ingredients_benefits'),
+                specs: t('ingredients_specs'),
+                region: t('ingredients_region'),
+                disclaimer: t('ingredients_disclaimer'),
+              }
             }}
             locale={normalizedLocale}
           />
@@ -374,11 +384,12 @@ export default function BuilderWrapper({
             </div>
             */}
 
-            <Review locale={normalizedLocale} reviewLink={`https://junip.co/forms/review/onsite/product?product_id=${productData?.product?.junip_id}&store_key=piDpeYVw4zaChuvPmrXsejph`} reviewTitle={t('review_linktitle')} />
+            {productData?.product?.review_enabled && <Review locale={normalizedLocale} reviewLink={`https://junip.co/forms/review/onsite/product?product_id=${productData?.product?.junip_id}&store_key=piDpeYVw4zaChuvPmrXsejph`} reviewTitle={t('review_linktitle')} />}
           
         {/* Full width sections */}
         
-        <Faq locale={normalizedLocale} />
+        <Faq data={faqData} locale={normalizedLocale} />
+
         {ingredientsData == null || ingredientsData.length == 0 ? (
         <div className={`w-screen relative font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
         <BuilderComponent

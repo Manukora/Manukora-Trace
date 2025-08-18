@@ -218,7 +218,9 @@ export async function getProductInfo(uuid: string) {
         title,
         title_arabic,
         image_url,
-        junip_id
+        junip_id,
+        review_enabled,
+        purity_enabled
       )
     `)
     .eq('id', batchId)
@@ -334,7 +336,8 @@ export async function getBatchInfo(uuid: string) {
       notes_arabic,
       potency_report_url,
       purity_report_url,
-      notes_image_url
+      notes_image_url,
+      is_arabic
     `)
     .eq('id', batchId)
     .maybeSingle();
@@ -351,7 +354,7 @@ export async function getIngredientsInfo(uuid: string) {
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -378,6 +381,7 @@ export async function getIngredientsInfo(uuid: string) {
   const { data, error } = await supabase
     .from('product_ingredients')
     .select(`
+      order,
       ingredient:ingredient_id (
         id,
         title,
@@ -393,7 +397,8 @@ export async function getIngredientsInfo(uuid: string) {
         region_image_url
       )
     `)
-    .eq('product_id', productId?.product?.id);
+    .eq('product_id', productId?.product?.id)
+    .order('order');
 
   if (error) {
     console.error('Error fetching ingredients info:', error);
@@ -432,4 +437,55 @@ export async function saveScanError(uuid: string) {
   if (error) {
     console.error('Error saving scan error:', error);
   }
+}
+
+export async function getFaqsInfo(uuid: string) {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+  
+  const productId = await getProductInfo(uuid);
+  if (!productId?.product?.id) return null;
+
+  const { data, error } = await supabase
+    .from('product_faqs')
+    .select(`
+      order,
+      faq:faq_id (
+        id,
+        question,
+        answer,
+        question_arabic,
+        answer_arabic
+      )
+    `)
+    .eq('product_id', productId.product.id)
+    .order('order');
+
+  if (error) {
+    console.error('Error fetching FAQs:', error);
+    return null;
+  }
+
+  return data;
 }

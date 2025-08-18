@@ -55,15 +55,17 @@ const getDeviceType = () => {
 interface EmailFormProps {
   uuid: string;
   locale: string;
+  preTickConsent: boolean;
 }
 
-export default function EmailForm({ uuid, locale }: EmailFormProps) {
+export default function EmailForm({ uuid, locale, preTickConsent }: EmailFormProps) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const normalizedLocale = i18n.language?.split('-')[0] || 'en';
   const [deviceType, setDeviceType] = useState('');
   const [userOS, setUserOS] = useState('');
-
+  // Remove the state and just use the prop directly
+  console.log(preTickConsent);
   useEffect(() => {
     // Set device type and OS
     setDeviceType(getDeviceType());
@@ -117,58 +119,58 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
       
       // Google Analytics event tracking
       if (email) {
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'email_submitted', {
-          'event_category': 'engagement',
-          'event_label': 'email_form',
-          'value': 1,
-          'email_length': email.length,
-          'form_location': 'email_form',
-          'uuid': uuid
-        });
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'email_submitted', {
+            'event_category': 'engagement',
+            'event_label': 'email_form',
+            'value': 1,
+            'email_length': email.length,
+            'form_location': 'email_form',
+            'uuid': uuid
+          });
+        }
+
+        // Hotjar event tracking
+        if (typeof window !== 'undefined' && window.hj) {
+          window.hj('event', 'email_submitted');
+        }
+
+        // Klaviyo event tracking
+        if (typeof window !== 'undefined' && window._learnq) {
+          window._learnq.push(['track', 'Email Submitted', {
+            'Email': email,
+            'UUID': uuid,
+            'Form Location': 'email_form',
+            'Email Length': email.length
+          }]);
+        }
       }
 
-      // Hotjar event tracking
-      if (typeof window !== 'undefined' && window.hj) {
-        window.hj('event', 'email_submitted');
-      }
+      if (phone_number) {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'phone_number_submitted', {
+            'event_category': 'engagement',
+            'event_label': 'phone_number_form',
+            'value': 1,
+            'phone_number_length': phone_number.length, 
+            'form_location': 'phone_number_form',
+            'uuid': uuid
+          });
+        }
 
-      // Klaviyo event tracking
-      if (typeof window !== 'undefined' && window._learnq) {
-        window._learnq.push(['track', 'Email Submitted', {
-          'Email': email,
-          'UUID': uuid,
-          'Form Location': 'email_form',
-          'Email Length': email.length
-        }]);
-      }
-    }
+        if (typeof window !== 'undefined' && window.hj) {
+          window.hj('event', 'phone_number_submitted');
+        }
 
-    if (phone_number) {
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'phone_number_submitted', {
-          'event_category': 'engagement',
-          'event_label': 'phone_number_form',
-          'value': 1,
-          'phone_number_length': phone_number.length, 
-          'form_location': 'phone_number_form',
-          'uuid': uuid
-        });
+        if (typeof window !== 'undefined' && window._learnq) {
+          window._learnq.push(['track', 'Phone Number Submitted', {
+            'Phone Number': phone_number,
+            'UUID': uuid,
+            'Form Location': 'phone_number_form',
+            'Phone Number Length': phone_number.length
+          }]);
+        }
       }
-
-      if (typeof window !== 'undefined' && window.hj) {
-        window.hj('event', 'phone_number_submitted');
-      }
-
-      if (typeof window !== 'undefined' && window._learnq) {
-        window._learnq.push(['track', 'Phone Number Submitted', {
-          'Phone Number': phone_number,
-          'UUID': uuid,
-          'Form Location': 'phone_number_form',
-          'Phone Number Length': phone_number.length
-        }]);
-      }
-    }
 
       router.push(`/verification/${uuid}`);
     } catch (error) {
@@ -192,23 +194,24 @@ export default function EmailForm({ uuid, locale }: EmailFormProps) {
 
   return (
     <div className={`font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
-    <BuilderComponent
-      model="figma-imports"
-      entry="33a66c32ccc64bcb8ec1cf4daf73948d"
-      locale={normalizedLocale}
+      <BuilderComponent
+        model="figma-imports"
+        entry="33a66c32ccc64bcb8ec1cf4daf73948d"
+        locale={normalizedLocale}
         context={{
-        handleEmailSubmit: handleEmailSubmit,
-      }}
-      data= {{
-        show_email: !(normalizedLocale === 'ar'),
-        show_phone_number: (normalizedLocale === 'ar'),
-        translations: {
-          description: t('emailform_description'),
-          disclaimer: t('emailform_disclaimer'),
-          submit: t('emailform_submit')
-        }
-      }}
-    />
+          handleEmailSubmit: handleEmailSubmit
+        }}
+        data={{
+          show_email: !(normalizedLocale === 'ar'),
+          show_phone_number: (normalizedLocale === 'ar'),
+          pre_tick_consent: preTickConsent,
+          translations: {
+            description: t('emailform_description'),
+            disclaimer: t('emailform_disclaimer'),
+            submit: t('emailform_submit')
+          }
+        }}
+      />
     </div>
   );
 }
