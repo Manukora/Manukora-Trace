@@ -17,6 +17,15 @@ interface BuilderWrapperProps {
   locale?: 'en' | 'ar';
 }
 
+declare global {
+  interface Window {
+    scrollToTestResults: () => void;
+    scrollToBeekeeper: () => void;
+    scrollToRegion: () => void;
+    scrollToTastingNotes: () => void;
+  }
+}
+
 export default function BuilderWrapper({ 
   beekeeperData, 
   productData, 
@@ -32,6 +41,22 @@ export default function BuilderWrapper({
 
   if (!beekeeperData || !productData || !regionData || !batchData || !ingredientsData || !faqData) {
     return null;
+  }
+
+  // Define the scroll functions directly in the window object
+  if (typeof window !== 'undefined') {
+    window.scrollToTestResults = () => {
+      document.getElementById('test-results')?.scrollIntoView({ behavior: 'smooth' });
+    };
+    window.scrollToBeekeeper = () => {
+      document.getElementById('beekeeper')?.scrollIntoView({ behavior: 'smooth' });
+    };
+    window.scrollToRegion = () => {
+      document.getElementById('region')?.scrollIntoView({ behavior: 'smooth' });
+    };
+    window.scrollToTastingNotes = () => {
+      document.getElementById('tasting-notes')?.scrollIntoView({ behavior: 'smooth' });
+    };
   }
 
   return (
@@ -86,7 +111,7 @@ export default function BuilderWrapper({
       {ingredientsData != null && ingredientsData.length > 0 ? (
         <Dropdown title_text={normalizedLocale === 'ar' ? "عسل" : "Honey"} title="Honey">
           <div className="max-w-[350px] mx-auto">
-            <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+            <div id="test-results" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent 
                 model="figma-imports"
                 entry="3b9c9f38a3384bffb3c3a0d2f41d9de5"
@@ -120,7 +145,7 @@ export default function BuilderWrapper({
               />
             </div>
 
-            <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+            <div id="beekeeper" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent
                 model="figma-imports"
                 entry="5b6e8dab0aaa440cbda0584208e3679e"
@@ -137,7 +162,7 @@ export default function BuilderWrapper({
               />
             </div>
 
-            <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+            <div id="region" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent 
                 model="figma-imports"
                 entry="91bd7c8f1d3745968bc36256894dd807"
@@ -155,7 +180,7 @@ export default function BuilderWrapper({
                   locale={normalizedLocale}
               />
             </div>
-              {ingredientsData && ingredientsData.length > 0 && (
+              {(ingredientsData && ingredientsData.length > 0) && (
             <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent 
                 model="figma-imports"
@@ -171,7 +196,7 @@ export default function BuilderWrapper({
             </div>
 )}
 
-            <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+            <div id="tasting-notes" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
               <BuilderComponent
                 model="figma-imports"
                 entry="8c0e4b990499491fb5876496d59b61a4"
@@ -194,7 +219,7 @@ export default function BuilderWrapper({
       ) : (
         <div className="w-full bg-[#fbf7ec] p-0 m-0 py-4">
         <div className="max-w-[350px] mx-auto">
-          <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+          <div id="test-results" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
             <BuilderComponent 
               model="figma-imports"
               entry="3b9c9f38a3384bffb3c3a0d2f41d9de5"
@@ -220,7 +245,7 @@ export default function BuilderWrapper({
             />
           </div>
 
-          <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+          <div id="beekeeper" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
             <BuilderComponent
               model="figma-imports"
               entry="5b6e8dab0aaa440cbda0584208e3679e"
@@ -237,7 +262,7 @@ export default function BuilderWrapper({
             />
           </div>
 
-          <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+          <div id="region" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
             <BuilderComponent 
               model="figma-imports"
               entry="91bd7c8f1d3745968bc36256894dd807"
@@ -256,21 +281,7 @@ export default function BuilderWrapper({
             />
           </div>
 
-          <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
-            <BuilderComponent 
-              model="figma-imports"
-              entry="707e1513effa4fbf89844095e04d65c5"
-              data={{
-                  translations: {
-                    title: t('additionalfacts_title'),
-                    description: t('additionalfacts_description'),
-                  }
-                }}
-                locale={normalizedLocale}
-            />
-          </div>
-
-          <div className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
+          <div id="tasting-notes" className={`w-full font-moretmnk ${normalizedLocale === 'ar' ? 'text-right' : 'text-left'}`} dir={normalizedLocale === 'ar' ? 'rtl' : 'ltr'}>
             <BuilderComponent
               model="figma-imports"
               entry="8c0e4b990499491fb5876496d59b61a4"
