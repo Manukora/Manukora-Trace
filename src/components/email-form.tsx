@@ -5,50 +5,29 @@ import { useRouter } from 'next/navigation';
 import { BuilderComponent } from './builder-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getCountryFromIP } from '@/utils/geo-consent';
 
-// Function to detect OS
+// Function to detect OS -> restricted to 4 allowed labels
 const getOperatingSystem = () => {
   if (typeof window === 'undefined') return '';
-  const userAgent = window.navigator.userAgent;
-  
-  // More comprehensive OS detection
-  if (/Android/i.test(userAgent)) return 'Android';
-  if (/iPhone|iPad|iPod/i.test(userAgent)) return 'iOS';
-  if (/Windows/i.test(userAgent)) return 'Windows';
-  if (/Macintosh|Mac OS X/i.test(userAgent)) return 'MacOS';
-  if (/Linux/i.test(userAgent)) return 'Linux';
-  if (/Chrome OS/i.test(userAgent)) return 'ChromeOS';
-  if (/BlackBerry/i.test(userAgent)) return 'BlackBerry';
-  if (/Windows Phone/i.test(userAgent)) return 'Windows Phone';
-  
-  return 'Unknown';
+  const userAgent = window.navigator.userAgent.toLowerCase();
+
+  if (userAgent.includes('windows')) return 'Microsoft Windows 10';
+  if (userAgent.includes('android')) return 'Android Linux';
+  if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod') || userAgent.includes('ios')) return 'Apple iOS';
+  return 'GNU/Linux OS';
 };
 
-// Function to detect device type
+// Function to detect device type -> only "desktop" or "mobile"
 const getDeviceType = () => {
   if (typeof window === 'undefined') return 'desktop';
-  
-  const userAgent = window.navigator.userAgent;
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-  
-  // Check for mobile devices using user agent
-  if (/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(userAgent)) {
+
+  const userAgent = window.navigator.userAgent.toLowerCase();
+
+  if (/android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent)) {
     return 'mobile';
   }
-  
-  // Check for tablets (iPad specifically)
-  if (/iPad/i.test(userAgent)) {
-    return 'tablet';
-  }
-  
-  // Fallback to screen size detection
-  if (screenWidth <= 768 || screenHeight <= 768) {
-    return 'mobile';
-  } else if (screenWidth <= 1024) {
-    return 'tablet';
-  }
-  
+
   return 'desktop';
 };
 
@@ -62,24 +41,22 @@ export default function EmailForm({ uuid, locale, preTickConsent }: EmailFormPro
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const normalizedLocale = i18n.language?.split('-')[0] || 'en';
-  const [deviceType, setDeviceType] = useState('');
-  const [userOS, setUserOS] = useState('');
-  // Remove the state and just use the prop directly
-  console.log(preTickConsent);
+  const [userLocation, setUserLocation] = useState('Unknown');
   useEffect(() => {
-    // Set device type and OS
-    setDeviceType(getDeviceType());
-    setUserOS(getOperatingSystem());
+    // Device and OS detection is now done at submission time
 
-    // Handle window resize for device type
-    const handleResize = () => {
-      setDeviceType(getDeviceType());
+    // Get user location
+    const fetchLocation = async () => {
+      try {
+        const country = await getCountryFromIP();
+        if (country) {
+          setUserLocation(country);
+        }
+      } catch (error) {
+        console.error('Error fetching location:', error);
+      }
     };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    fetchLocation();
   }, []);
 
   useEffect(() => {
@@ -114,8 +91,13 @@ export default function EmailForm({ uuid, locale, preTickConsent }: EmailFormPro
   }, [uuid]);
 
   const handleEmailSubmit = async (email: string | null, phone_number: string | null, comms: string) => {
+    // Get fresh values at the time of submission
+    const currentDevice = getDeviceType();
+    const currentOS = getOperatingSystem();
     try {
-      await saveUserEmail(email, phone_number, comms, uuid, 'Unknown', deviceType, userOS);
+      // Use current location or fallback to 'Unknown'
+      const currentLocation = userLocation || 'Unknown';
+      await saveUserEmail(email, phone_number, comms, uuid, currentLocation, currentDevice, currentOS);
       
       // Google Analytics event tracking
       if (email) {

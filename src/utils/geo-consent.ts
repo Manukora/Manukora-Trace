@@ -23,7 +23,7 @@ interface IpApiResponse {
  */
 export async function getCountryFromIP(): Promise<string | null> {
   try {
-    const response = await fetch('http://ip-api.com/json/?fields=status,countryCode', {
+    const response = await fetch('https://ip-api.com/json/?fields=status,countryCode', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

@@ -1,6 +1,6 @@
-import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo, getIngredientsInfo, saveScanError, getFaqsInfo } from '@/actions/actions';
+import { getBatchIdFromUUID, getBeekeeperInfo, getProductInfo, getRegionInfo, getUserEmail, getBatchInfo, getIngredientsInfo, saveScanError, getFaqsInfo, getCompanyInfo } from '@/actions/actions';
 import { notFound } from 'next/navigation';
-import BatchPageClient, { FAQData, IngredientData } from '../../../components/BatchPageClient';
+import BatchPageClient, { CompanyData, FAQData, IngredientData } from '../../../components/BatchPageClient';
 import { shouldPreTickConsent } from '@/utils/geo-consent';
 
 export const dynamic = 'force-dynamic';
@@ -13,13 +13,14 @@ export default async function BatchPage({ params }: { params: Promise<{ uuid: st
     notFound();
   }
 
-  const [beekeeperData, productData, regionData, batchData, ingredientsData, faqData, preTickConsent] = await Promise.all([
+  const [beekeeperData, productData, regionData, batchData, ingredientsData, faqData, companyData, preTickConsent] = await Promise.all([
     getBeekeeperInfo(uuid),
     getProductInfo(uuid),
     getRegionInfo(uuid),
     getBatchInfo(uuid),
     getIngredientsInfo(uuid),
     getFaqsInfo(uuid),
+    getCompanyInfo(uuid),
     shouldPreTickConsent()
   ]);
 
@@ -34,6 +35,7 @@ export default async function BatchPage({ params }: { params: Promise<{ uuid: st
       batchData={batchData}
       ingredientsData={ingredientsData as IngredientData}
       faqData={faqData as FAQData}
+      companyData={companyData as CompanyData}
       locale={locale}
       uuid={uuid}
       email={email}

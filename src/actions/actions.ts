@@ -1,8 +1,24 @@
 "use server"
 
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from 'next/headers';
-import { BatchData, BeekeeperData, IngredientData, RegionData } from "@/components/BatchPageClient";
+import { cookies, headers } from 'next/headers';
+import { BatchData, BeekeeperData, IngredientData, RegionData, CompanyData } from "@/components/BatchPageClient";
+
+export async function getUserIP(): Promise<string | null> {
+  const headersList = await headers();
+  const forwarded = headersList.get('x-forwarded-for');
+  const realIP = headersList.get('x-real-ip');
+  
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  
+  if (realIP) {
+    return realIP;
+  }
+  
+  return null;
+}
 
 export async function getBatchIdFromUUID(uuid: string) {
   const cookieStore = await cookies();
@@ -60,7 +76,10 @@ export async function getUserEmail() {
   return emailCookie?.value || null;
 }
 
-export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string, location: string, device: string, os: string) {
+export async function saveUserEmail(email: string | null, phone_number: string | null, comms: string, uuid: string, location: string, device: string, os: string, ip_address?: string) {
+  // Get IP address if not provided
+  const userIP = ip_address || await getUserIP();
+  
   // Create a client with service role key for customer insert
   const cookieStore = await cookies();
   const supabaseAdmin = createServerClient(
@@ -104,6 +123,7 @@ export async function saveUserEmail(email: string | null, phone_number: string |
       location: location,
       device: device,
       os: os,
+      ip_address: userIP,
       product_id: (await getProductInfo(uuid))?.product?.id, 
       batch_id: await getBatchIdFromUUID(uuid), 
       created_at: new Date().toISOString() 
@@ -213,10 +233,12 @@ export async function getProductInfo(uuid: string) {
       id,
       product:product_id (
         id,
+        company_id,
         mgo_level,
         size,
         title,
         title_arabic,
+        description,
         image_url,
         junip_id,
         review_enabled,
@@ -488,4 +510,46 @@ export async function getFaqsInfo(uuid: string) {
   }
 
   return data;
+}
+
+export async function getCompanyInfo(uuid: string) {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+
+  const productId = await getProductInfo(uuid);
+  if (!productId?.product?.id) return null;
+
+  const { data, error } = await supabase
+    .from('companies')
+    .select('id, name')
+    .eq('id', productId.product.company_id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching company info:', error);
+    return null;
+  }
+
+  return data as CompanyData;
 }

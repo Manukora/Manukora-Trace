@@ -22,10 +22,12 @@ export type ProductData = {
   uuid: string;
   product: {
     id: string;
+    company_id: string;
     mgo_level: number;
     size: string;
     title: string;
     title_arabic: string;
+    description: string;
     image_url: string;
     junip_id: string;
     review_enabled: boolean;
@@ -89,13 +91,23 @@ export type FAQData = {
   order: number;
 }[] | null;
 
-export default function BatchPageClient({ beekeeperData, productData, regionData, batchData, ingredientsData, faqData, locale, uuid, email, preTickConsent = false }: {
+export type CompanyData = {
+  id: string;
+  name: string;
+  slug: string;
+  details: string;
+  contact: string;
+  address: string;
+} | null;
+
+export default function BatchPageClient({ beekeeperData, productData, regionData, batchData, ingredientsData, faqData, companyData, locale, uuid, email, preTickConsent = false }: {
   beekeeperData: BeekeeperData;
   productData: ProductData;
   regionData: RegionData;
   batchData: BatchData;
   ingredientsData: IngredientData;
   faqData: FAQData;
+  companyData: CompanyData;
   locale: string;
   uuid: string;
   email: string | null;
@@ -118,6 +130,7 @@ export default function BatchPageClient({ beekeeperData, productData, regionData
           ingredientsData={ingredientsData as IngredientData}
           batchData={batchData as BatchData}
           faqData={faqData as FAQData}
+          companyData={companyData as CompanyData}
         />
       </div>
       <DragUp open={showSheet && !email} onClose={() => setShowSheet(false)} />
