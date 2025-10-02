@@ -43,7 +43,7 @@ export const MgoCounter = ({ mgo_rating = 0, mgo_level = 0 }: {mgo_rating?: numb
         <CountUp
           start={startValue}
           end={mgo_rating}
-          duration={10}
+          duration={5}
           separator=","
           decimals={0}
           delay={0}
