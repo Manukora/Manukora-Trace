@@ -96,6 +96,7 @@ export type CompanyData = {
   id: string;
   name: string;
   slug: string;
+  link: string | null;
   details: string;
   contact: string;
   address: string;
