@@ -38,6 +38,7 @@ export const MgoCounter = ({ mgo_rating = 0, mgo_level = 0 }: {mgo_rating?: numb
         minWidth: "8rem",
         textAlign: "center",
       }}
+      className="pr-6"
     >
       {isVisible ? (
         <CountUp

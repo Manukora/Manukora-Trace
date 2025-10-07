@@ -90,7 +90,7 @@ export default function BuilderWrapper({
             data={{
                 mgo_level: productData.product.mgo_level || 0,
                 size: productData.product.size || null,
-                title: productData.product.description, // This is the title that determines styling
+                title: productData.product.title, // This is the title that determines styling
                 title_text: productData.product.description || null,
                 image_url: productData.product.image_url || null,
                 ingredients: ingredientsData != null && ingredientsData.length > 0,
@@ -216,7 +216,7 @@ export default function BuilderWrapper({
                       title: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.title_arabic : beekeeperData.beekeeper.title) || null,
                       bio: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.description_arabic : beekeeperData.beekeeper.description) || null,
                       test_date: batchData.test_date || null,
-                      region: (normalizedLocale === 'ar' ? regionData.region.title_arabic : regionData.region.title) || null,
+                      region: (productData?.product?.title) || null,
                       notes: normalizedLocale === 'ar' ? batchData.notes_arabic : batchData.notes || null,
                       notes_image_url: batchData.notes_image_url || null,
                       translations: {
@@ -309,7 +309,7 @@ export default function BuilderWrapper({
                     title: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.title_arabic : beekeeperData.beekeeper.title) || null,
                     bio: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.description_arabic : beekeeperData.beekeeper.description) || null,
                     test_date: batchData.test_date || null,
-                    region: (normalizedLocale === 'ar' ? regionData.region.title_arabic : regionData.region.title) || null,
+                    region: (batchData.batch_number) || null,
                     notes: batchData.notes || null,
                     notes_image_url: batchData.notes_image_url || null,
                     translations: {

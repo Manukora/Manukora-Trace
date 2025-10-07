@@ -52,6 +52,7 @@ export type RegionData = {
 
 export type BatchData = {
   id: string;
+  batch_number: string;
   mgo_rating: number;
   umf_rating: number;
   test_date: string;

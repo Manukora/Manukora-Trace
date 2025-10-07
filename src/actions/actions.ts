@@ -351,6 +351,7 @@ export async function getBatchInfo(uuid: string) {
     .from('batches')
     .select(`
       id,
+      batch_number,
       mgo_rating,
       umf_rating,
       test_date,
