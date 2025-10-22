@@ -72,7 +72,9 @@ export default function Footer({ title }: { title: string }) {
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
                       <a href={isUk ? "https://manukora.co.uk/pages/terms-conditions" : "https://manukora.com/pages/terms-conditions"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Terms &amp; Conditions</a>
-                        <a href={isUk ? "https://manukora.co.uk/pages/privacy-policy" : "https://manukora.com/pages/privacy-policy"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Privacy Policy</a>
+                    </li>
+                    <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
+                      <a href={isUk ? "https://manukora.co.uk/pages/privacy-policy" : "https://manukora.com/pages/privacy-policy"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Privacy Policy</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
                       <a href={isUk ? "https://manukora.co.uk/pages/help-center" : "https://manukora.com/pages/help-center"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">FAQ</a>
