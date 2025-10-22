@@ -52,7 +52,7 @@ export const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl, title }) => {
   };
 
   return (
-    <div className="relative rounded-lg overflow-hidden bg-white shadow-lg">
+    <div className="relative rounded-lg overflow-hidden bg-white shadow-lg" style={{ overscrollBehavior: 'contain' }}>
       {/* Header with title and download button */}
       <div className="flex items-center justify-between p-4 bg-stone-700 text-white">
         <h2 className="text-lg font-medium truncate font-sans">{title}</h2>
@@ -67,7 +67,7 @@ export const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl, title }) => {
       </div>
 
       {/* PDF viewer */}
-      <div className="w-full h-[400px] bg-gray-100 relative">
+      <div className="w-full h-[400px] bg-gray-100 relative overflow-hidden">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
             <div className="text-gray-500">Loading PDF...</div>
@@ -76,10 +76,14 @@ export const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl, title }) => {
         
         <iframe
           src={`${pdfUrl}#view=Fit&toolbar=0&navpanes=0&scrollbar=0`}
-          className="w-full h-full"
+          className="w-full h-full pointer-events-auto"
           title={title}
           frameBorder="0"
           onLoad={() => setIsLoading(false)}
+          style={{
+            touchAction: 'pan-x pan-y',
+            overscrollBehavior: 'contain'
+          }}
         />
       </div>
     </div>

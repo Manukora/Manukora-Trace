@@ -428,7 +428,7 @@ export default function BuilderWrapper({
           model="figma-imports"
             entry="a23f884d0eda44afb36a8de6957fa9a0"
             data={{
-              link: companyData?.link || "https://manukora.com/collections/frontpage",
+              link: companyData?.link || (productData?.product?.title.includes("UK") ? "https://manukora.co.uk/collections/frontpage" : "https://manukora.com/collections/frontpage"),
               translations: {
                 title: t('promo_title'),
                 description: t('promo_description'),
@@ -450,7 +450,7 @@ export default function BuilderWrapper({
           locale={normalizedLocale}
       />
     </div>}
-        <Footer />
+        <Footer title={productData?.product?.title || ""} />
       </div>
     </>
   );

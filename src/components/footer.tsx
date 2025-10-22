@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-export default function Footer() {
+export default function Footer({ title }: { title: string }) {
+  const isUk = title.includes("UK");
     return (
         <div className="w-screen relative bg-[#b4b08d]">
         <div id="shopify-section-footer" className="shopify-section font-metrosans " role="contentinfo">
@@ -14,10 +15,10 @@ export default function Footer() {
                   </h3>
                   <ul className="list ma0 pa0 footer_acc_content custom_footer_content" data-acsb-menu="ul">
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/collections/manuka-honey" className="font-metrosans" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Shop Mānuka Honey</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/collections/manuka-honey" : "https://manukora.com/collections/manuka-honey"} className="font-metrosans" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Shop Mānuka Honey</Link>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/collections/frontpage" className="font-metrosans" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Shop All</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/collections/frontpage" : "https://manukora.com/collections/frontpage"} className="font-metrosans" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Shop All</Link>
                     </li>
                   </ul>
                 </div>
@@ -29,25 +30,25 @@ export default function Footer() {
                   </h3>
                   <ul className="list ma0 pa0 footer_acc_content custom_footer_content" data-acsb-menu="ul">
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/aboutmanukora" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Mission</a>
+                      <a href={isUk ? "https://manukora.co.uk/pages/aboutmanukora" : "https://manukora.com/pages/aboutmanukora"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Mission</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/manuka-honey-explained" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Mānuka Honey</a>
+                      <a href={isUk ? "https://manukora.co.uk/pages/manuka-honey-explained" : "https://manukora.com/pages/manuka-honey-explained"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Mānuka Honey</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/pages/our-environment" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Environment</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/pages/our-environment" : "https://manukora.com/pages/our-environment"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Our Environment</Link>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/pages/manuka-wellness-guide" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">The Ultimate Guide to Mānuka Honey</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/pages/manuka-wellness-guide" : "https://manukora.com/pages/manuka-wellness-guide"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">The Ultimate Guide to Mānuka Honey</Link>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/blogs/honey-guide" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Blog</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/blogs/honey-guide" : "https://manukora.com/blogs/honey-guide"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Blog</Link>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/pages/quiz" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Take the MGO Quiz</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/pages/quiz" : "https://manukora.com/pages/quiz"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Take the MGO Quiz</Link>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="https://manukora.com/pages/reviews" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Reviews</Link>
+                      <Link href={isUk ? "https://manukora.co.uk/pages/reviews" : "https://manukora.com/pages/reviews"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Reviews</Link>
                     </li>
                   </ul>
                 </div>
@@ -59,32 +60,25 @@ export default function Footer() {
                   </h3>
                   <ul className="list ma0 pa0 footer_acc_content custom_footer_content" data-acsb-menu="ul">
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/help-center" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Contact Us</a>
+                      <a href={isUk ? "https://manukora.co.uk/pages/help-center" : "https://manukora.com/pages/help-center"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Contact Us</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/apps/retextion#/login" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">
+                      <a href={isUk ? "https://manukora.co.uk/apps/retextion#/login" : "https://manukora.com/apps/retextion#/login"} data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">
                         Manage Subscriptions
                       </a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/apps/wonderment/tracking" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Track My Order</a>
+                      <a href={isUk ? "https://manukora.co.uk/apps/wonderment/tracking" : "https://manukora.com/apps/wonderment/tracking"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Track My Order</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/terms-conditions" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Terms &amp; Conditions</a>
+                      <a href={isUk ? "https://manukora.co.uk/pages/terms-conditions" : "https://manukora.com/pages/terms-conditions"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Terms &amp; Conditions</a>
+                        <a href={isUk ? "https://manukora.co.uk/pages/privacy-policy" : "https://manukora.com/pages/privacy-policy"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Privacy Policy</a>
                     </li>
                     <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/privacy-policy" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Privacy Policy</a>
-                    </li>
-                    <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <a href="https://manukora.com/pages/help-center" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">FAQ</a>
-                    </li>
-                    <li className="list-item ma0" data-acsb-menu="li" data-acsb-menu-root="true">
-                      <Link href="/pages/refunds-returns" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">Refunds/Returns</Link>
+                      <a href={isUk ? "https://manukora.co.uk/pages/help-center" : "https://manukora.com/pages/help-center"} target="_blank" data-acsb-clickable="true" data-acsb-navigable="true" data-acsb-now-navigable="true" data-custom-button-processed="true" data-acsb-menu="a" data-acsb-menu-root-link="true">FAQ</a>
                     </li>
                   </ul>
                 </div>
-      </section>
-
               <div className="footer__bottom mb5">
                 <div className="footer__social-icons">
                   <ul className="list ma0 pa0">
@@ -264,6 +258,7 @@ export default function Footer() {
         <div className="footer__copyright">
           <p>© All Rights Reserved 2025  ·  <a target="_blank" rel="nofollow" href="https://www.shopify.com?utm_campaign=poweredby&utm_medium=shopify&utm_source=onlinestore" data-acsb-clickable="true" data-acsb-navigable="true" tabIndex={-1} data-acsb-now-navigable="false" aria-hidden="true" data-acsb-hidden="true" data-custom-button-processed="true">Powered by Shopify</a></p>
         </div>
+        </section>
       </div>
     </footer>
         </div>
