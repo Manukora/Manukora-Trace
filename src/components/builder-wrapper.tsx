@@ -127,6 +127,8 @@ export default function BuilderWrapper({
                       potency_report_url: batchData.potency_report_url || null,
                       purity_report_url: batchData.purity_report_url || null,
                       ingredients: true,
+                      purity_enabled: productData?.product?.purity_enabled || true,
+                      is_manukora: companyData?.name == "Manukora",
                       translations: {
                         title: t('testresults_title'),
                         potency: t('testresults_potency'),
@@ -216,7 +218,7 @@ export default function BuilderWrapper({
                       title: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.title_arabic : beekeeperData.beekeeper.title) || null,
                       bio: (normalizedLocale === 'ar' ? beekeeperData.beekeeper.description_arabic : beekeeperData.beekeeper.description) || null,
                       test_date: batchData.test_date || null,
-                      region: (productData?.product?.title) || null,
+                      region: batchData.batch_number || null,
                       notes: normalizedLocale === 'ar' ? batchData.notes_arabic : batchData.notes || null,
                       notes_image_url: batchData.notes_image_url || null,
                       translations: {
